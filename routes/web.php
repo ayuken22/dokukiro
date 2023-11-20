@@ -24,3 +24,6 @@ Route::get('/', function() {
 });
 
 Route::get('/', [PostController::class, 'index']);
+
+Route::get('/signpu', 'PostController@showSignUpForm')->name('signup');
+Route::get('/signup', 'PoatController@signup');
