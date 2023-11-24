@@ -2,12 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <title>読書記録</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>読書記録アプリ</title>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     </head>
     <body>
         <h1>新規作成</h1>
+        
         <div class='posts'>
             @foreach ($posts as $post)
             <div class='post'>
@@ -28,7 +30,6 @@
             @endsection
         </div>
         <div class='paginate'>
-            {{ $posts->links(1) }}
         </div>
     </body>
 </html>
