@@ -3,22 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Post $post)
     {
-        $posts = post::all();
-        
-        return view('posts.index', ['posts' => $posts]);
+        return view('posts.index')->with(['posts' => $post->getPaginateByLimit()]);
     }
     
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
-        
-        return view('posts.show', ['post' => $post]);
+        return view('posts.show')->with(['post' => $post]);
     }
     
     public function create()
@@ -26,14 +23,23 @@ class PostController extends Controller
         return view('posts.create');
     }
     
-    public function store(Request $request)
+    public function store(Request $request, Post $post)
     {
-        $post = new Book();
-        $post->title = $request->input('title');
-        $post->author = $request->input('author');
-        $post->save();
-        
-        return redirect()->route('posts.index')->with('success', '作成されました！');
+        $input = $request['post'];
+        $post->fill($input)->save();
+        return redirect('/posts/' . $post->id);
+    }
+    
+    public function edit(Post $post)
+    {
+        return view('posts.edit')->with(['post' => $post]);
+    }
+    
+    public function update(PostRequest $request, Post $post)
+    {
+        $input_post = $request['post'];
+        $post->fill($input_post)->save();
+        return redirect('/posts/' . $post->id);
     }
     
     public function showSignUpForm()
@@ -48,6 +54,12 @@ class PostController extends Controller
             'email' => 'required|email|unique::users|max:255',
             'password' => 'required|string|min:8|confirmed',
             ]);
+    }
+    
+    public function delete(Post $post)
+    {
+        $post->delete();
+        return redirect('/');
     }
 }
 ?>
